@@ -1,0 +1,73 @@
+{
+  "categories": [
+    {
+      "id": "aiml",
+      "name": "AI/ML",
+      "icon": "tensorflow",
+      "iconType": "simple-icons",
+      "skills": [
+        { "name": "TensorFlow", "icon": "tensorflow", "iconType": "simple-icons" },
+        { "name": "PyTorch", "icon": "pytorch", "iconType": "simple-icons" },
+        { "name": "Scikit-learn", "icon": "scikitlearn", "iconType": "simple-icons" },
+        { "name": "OpenCV", "icon": "opencv", "iconType": "simple-icons" },
+        { "name": "NLP", "icon": "brain", "iconType": "lucide" },
+        { "name": "Computer Vision", "icon": "eye", "iconType": "lucide" }
+      ]
+    },
+    {
+      "id": "frontend",
+      "name": "Frontend",
+      "icon": "react",
+      "iconType": "simple-icons",
+      "skills": [
+        { "name": "React", "icon": "react", "iconType": "simple-icons" },
+        { "name": "Next.js", "icon": "nextdotjs", "iconType": "simple-icons" },
+        { "name": "TypeScript", "icon": "typescript", "iconType": "simple-icons" },
+        { "name": "Tailwind CSS", "icon": "tailwindcss", "iconType": "simple-icons" },
+        { "name": "Vue.js", "icon": "vuedotjs", "iconType": "simple-icons" },
+        { "name": "JavaScript", "icon": "javascript", "iconType": "simple-icons" }
+      ]
+    },
+    {
+      "id": "backend",
+      "name": "Backend",
+      "icon": "nodedotjs",
+      "iconType": "simple-icons",
+      "skills": [
+        { "name": "Node.js", "icon": "nodedotjs", "iconType": "simple-icons" },
+        { "name": "Python", "icon": "python", "iconType": "simple-icons" },
+        { "name": "Express", "icon": "express", "iconType": "simple-icons" },
+        { "name": "Django", "icon": "django", "iconType": "simple-icons" },
+        { "name": "PostgreSQL", "icon": "postgresql", "iconType": "simple-icons" },
+        { "name": "MongoDB", "icon": "mongodb", "iconType": "simple-icons" }
+      ]
+    },
+    {
+      "id": "devops",
+      "name": "DevOps & Cloud",
+      "icon": "amazonwebservices",
+      "iconType": "simple-icons",
+      "skills": [
+        { "name": "Docker", "icon": "docker", "iconType": "simple-icons" },
+        { "name": "AWS", "icon": "amazonwebservices", "iconType": "simple-icons" },
+        { "name": "Git", "icon": "git", "iconType": "simple-icons" },
+        { "name": "CI/CD", "icon": "githubactions", "iconType": "simple-icons" },
+        { "name": "Linux", "icon": "linux", "iconType": "simple-icons" },
+        { "name": "Vercel", "icon": "vercel", "iconType": "simple-icons" }
+      ]
+    },
+    {
+      "id": "tools",
+      "name": "Tools & Others",
+      "icon": "wrench",
+      "iconType": "lucide",
+      "skills": [
+        { "name": "VS Code", "icon": "visualstudiocode", "iconType": "simple-icons" },
+        { "name": "Postman", "icon": "postman", "iconType": "simple-icons" },
+        { "name": "Figma", "icon": "figma", "iconType": "simple-icons" },
+        { "name": "GitHub", "icon": "github", "iconType": "simple-icons" },
+        { "name": "Jira", "icon": "jira", "iconType": "simple-icons" }
+      ]
+    }
+  ]
+}

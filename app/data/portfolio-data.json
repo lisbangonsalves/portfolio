@@ -1,0 +1,97 @@
+{
+  "skills": {
+    "aiml": [
+      "TensorFlow",
+      "PyTorch",
+      "Scikit-learn",
+      "OpenCV",
+      "NLP",
+      "Computer Vision"
+    ],
+    "frontend": [
+      "React",
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Vue.js",
+      "JavaScript"
+    ],
+    "backend": [
+      "Node.js",
+      "Python",
+      "Express",
+      "Django",
+      "PostgreSQL",
+      "MongoDB"
+    ],
+    "devops": [
+      "Docker",
+      "AWS",
+      "Git",
+      "CI/CD",
+      "Linux",
+      "Vercel"
+    ],
+    "hobbies": [
+      "Gym",
+      "Fitness",
+      "Running",
+      "Swimming"
+    ]
+  },
+  "projects": [
+    {
+      "id": 1,
+      "title": "E-Commerce Platform",
+      "description": "A full-featured e-commerce platform with payment integration, inventory management, and admin dashboard. Built with modern technologies for optimal performance and user experience.",
+      "detailedDescription": "This comprehensive e-commerce platform represents a modern approach to online retail, combining cutting-edge technologies with intuitive user experience design.\n\nKey Features:\n\n1. Advanced Product Management\nThe platform features a sophisticated product catalog system that supports unlimited categories, subcategories, and product variants. Each product can have multiple images, detailed descriptions, specifications, and custom attributes. The inventory management system tracks stock levels in real-time, automatically updates product availability, and sends notifications when items are running low.\n\n2. Secure Payment Processing\nIntegrated with Stripe for secure payment processing, the platform supports multiple payment methods including credit cards, debit cards, and digital wallets. The payment flow is PCI-DSS compliant, ensuring that sensitive customer data is handled securely. The system also includes support for discount codes, gift cards, and promotional campaigns.\n\n3. Customer Experience\nThe customer-facing interface is built with Next.js for optimal performance and SEO. The platform features server-side rendering for fast initial page loads, dynamic routing for smooth navigation, and progressive image loading for enhanced performance. Customers can create accounts, save favorite items, maintain wishlists, and track order history.\n\n4. Shopping Cart & Checkout\nThe shopping cart system is persistent across sessions, allowing customers to save items for later. The checkout process is streamlined into a simple multi-step flow that includes address validation, shipping method selection, and order review. Real-time shipping calculations integrate with major carriers to provide accurate delivery estimates.\n\n5. Admin Dashboard\nThe administrative backend provides comprehensive tools for managing the entire e-commerce operation. Store administrators can manage products, process orders, handle customer inquiries, generate sales reports, and monitor analytics. The dashboard features interactive charts and graphs powered by modern data visualization libraries.\n\n6. Order Management\nThe order management system tracks orders through their complete lifecycle from placement to delivery. Automated email notifications keep customers informed at each stage. The system supports order modifications, cancellations, and returns processing with built-in workflow automation.\n\n7. Search & Filtering\nPowerful search functionality allows customers to quickly find products using keywords, categories, price ranges, and custom filters. The search system includes autocomplete suggestions, spelling correction, and result ranking based on relevance and popularity.\n\n8. Performance Optimization\nThe platform is built with performance as a priority, utilizing code splitting, lazy loading, and efficient caching strategies. Static generation for product pages ensures lightning-fast load times, while incremental static regeneration keeps content fresh.\n\n9. Responsive Design\nThe entire platform is fully responsive, providing an optimal viewing experience across all devices from mobile phones to desktop computers. The design adapts seamlessly to different screen sizes while maintaining functionality and aesthetics.\n\n10. Security Features\nRobust security measures include HTTPS encryption, secure authentication, CSRF protection, and SQL injection prevention. Regular security audits and updates ensure the platform remains protected against emerging threats.\n\nTechnical Architecture:\nThe platform leverages Next.js for the frontend framework, providing benefits like automatic code splitting, optimized performance, and excellent developer experience. PostgreSQL serves as the primary database, offering reliability, ACID compliance, and powerful query capabilities. The backend API is built with Node.js, providing fast, scalable server-side processing.",
+      "technologies": [
+        "Next.js",
+        "Stripe",
+        "PostgreSQL"
+      ],
+      "demoUrl": "#",
+      "githubUrl": "#",
+      "logo": {
+        "type": "image",
+        "data": "https://images.unsplash.com/photo-1557821552-17105176677c?w=1200&h=400&fit=crop&q=80",
+        "color": "from-gray-50 to-gray-100 dark:from-gray-950/20 dark:to-gray-900/20"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Analytics Dashboard",
+      "description": "Interactive analytics dashboard with real-time data visualization and customizable reports. Provides actionable insights through elegant data presentation.",
+      "detailedDescription": "A comprehensive analytics dashboard designed to transform raw data into actionable insights through powerful visualizations and intelligent reporting.\n\nCore Capabilities:\n\n1. Real-Time Data Processing\nThe dashboard connects to multiple data sources and processes information in real-time, ensuring that stakeholders always have access to the most current metrics. WebSocket connections enable live updates without requiring page refreshes, providing a seamless monitoring experience for critical business metrics.\n\n2. Interactive Visualizations\nBuilt with D3.js, the dashboard offers a rich library of visualization types including line charts, bar graphs, pie charts, heat maps, scatter plots, and custom composite visualizations. Each chart is fully interactive, allowing users to zoom, pan, filter, and drill down into specific data points for deeper analysis.\n\n3. Customizable Widgets\nUsers can create personalized dashboard layouts by selecting from dozens of pre-built widgets or creating custom ones. The drag-and-drop interface makes it easy to arrange widgets, resize them, and configure their data sources. Widget configurations are saved per user, ensuring a personalized experience.\n\n4. Advanced Filtering System\nThe filtering engine allows users to slice and dice data across multiple dimensions simultaneously. Users can apply filters globally across all widgets or configure widget-specific filters. Saved filter presets enable quick switching between different analytical views.\n\n5. Report Generation\nAutomated report generation creates scheduled or on-demand reports in multiple formats including PDF, Excel, and CSV. Reports can be customized with company branding, include dynamic data tables and charts, and be automatically distributed via email to stakeholder groups.\n\n6. Data Source Integration\nThe platform integrates seamlessly with various data sources including REST APIs, databases (PostgreSQL, MySQL, MongoDB), cloud services (AWS, Azure, GCP), and third-party analytics platforms. A flexible connector architecture makes it easy to add new data sources.\n\n7. Performance Metrics\nTrack key performance indicators (KPIs) with customizable thresholds and alerts. The system can monitor hundreds of metrics simultaneously and send notifications when values exceed defined boundaries. Historical trending helps identify patterns and anomalies over time.\n\n8. User Access Control\nGranular permission system controls who can view, edit, or share specific dashboards and data. Role-based access control ensures that sensitive business information is only visible to authorized personnel. Audit logs track all user actions for compliance and security.\n\n9. Export and Sharing\nDashboards can be shared via secure links with configurable expiration dates. Users can export individual visualizations or entire dashboards in various formats. Embedded mode allows dashboards to be integrated into other applications or internal tools.\n\n10. Responsive Interface\nThe dashboard is fully responsive, adapting to different screen sizes from mobile phones to large desktop displays. Touch-optimized controls ensure smooth interaction on tablets and touch-enabled devices.\n\n11. Time Series Analysis\nAdvanced time series analysis tools help identify trends, seasonality, and forecasting. Users can compare metrics across different time periods, calculate moving averages, and perform year-over-year comparisons.\n\n12. Collaboration Features\nTeam members can annotate charts, leave comments on specific data points, and share insights with colleagues. Notification system keeps team members informed about important changes or anomalies in monitored metrics.\n\nTechnical Stack:\nThe frontend is built with React for component-based architecture and efficient rendering. D3.js provides powerful data visualization capabilities with support for custom, animated charts. The Express backend handles API requests, data aggregation, and report generation. Redis caching layer improves performance for frequently accessed data.\n\nPerformance Considerations:\nThe dashboard employs several optimization techniques including data pagination, lazy loading of widgets, memoization of expensive calculations, and efficient data structures for fast filtering and sorting. Virtual scrolling handles large datasets without impacting performance.",
+      "technologies": [
+        "React",
+        "D3.js",
+        "Express"
+      ],
+      "demoUrl": "#",
+      "githubUrl": "#",
+      "logo": {
+        "type": "image",
+        "data": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=400&fit=crop&q=80",
+        "color": "from-gray-50 to-gray-100 dark:from-gray-950/20 dark:to-gray-900/20"
+      }
+    }
+  ],
+  "experience": [
+    {
+      "id": 1764818403673,
+      "title": "Automate Support Engineer",
+      "company": "BrowserStack",
+      "period": "2024 - Present",
+      "responsibilities": [
+        "Provided technical support for BrowserStack Automate, assisting global customers with automation testing issues.",
+        "Diagnosed failures in CI/CD pipelines, Selenium/Appium tests, and cross-browser environments.",
+        "Collaborated with engineering teams to troubleshoot platform-level defects.",
+        "Ensured timely resolution of tickets while maintaining high customer satisfaction."
+      ],
+      "logo": "/company_logo/browserstack_1764818338328.svg"
+    }
+  ],
+  "messages": [],
+  "categoryMeta": {}
+}
