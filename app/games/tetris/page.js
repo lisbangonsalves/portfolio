@@ -304,21 +304,21 @@ export default function Tetris() {
                     <h3 className="text-sm font-semibold text-black dark:text-white mb-3 text-center">Touch Controls</h3>
                     <div className="grid grid-cols-4 gap-2 mb-2">
                       <button
-                        onClick={() => movePiece('rotate')}
-                        onTouchEnd={(e) => {
+                        onTouchStart={(e) => {
                           e.preventDefault();
-                          e.stopPropagation();
+                          movePiece('rotate');
                         }}
+                        onClick={() => movePiece('rotate')}
                         className="col-span-1 py-3 bg-black dark:bg-white text-white dark:text-black rounded-lg font-bold text-base active:scale-95 transition-all touch-none select-none hover:bg-black/80 dark:hover:bg-white/90"
                       >
                         ↻
                       </button>
                       <button
-                        onClick={() => hardDrop()}
-                        onTouchEnd={(e) => {
+                        onTouchStart={(e) => {
                           e.preventDefault();
-                          e.stopPropagation();
+                          hardDrop();
                         }}
+                        onClick={() => hardDrop()}
                         className="col-span-3 py-3 border-2 border-black dark:border-white text-black dark:text-white rounded-lg font-medium text-sm active:scale-95 transition-all touch-none select-none hover:bg-black/5 dark:hover:bg-white/5"
                       >
                         ⬇ Drop
@@ -326,31 +326,31 @@ export default function Tetris() {
                     </div>
                     <div className="grid grid-cols-3 gap-2">
                       <button
-                        onClick={() => movePiece('left')}
-                        onTouchEnd={(e) => {
+                        onTouchStart={(e) => {
                           e.preventDefault();
-                          e.stopPropagation();
+                          movePiece('left');
                         }}
+                        onClick={() => movePiece('left')}
                         className="py-3 border-2 border-black dark:border-white text-black dark:text-white rounded-lg font-bold text-xl active:scale-95 transition-all touch-none select-none hover:bg-black/5 dark:hover:bg-white/5"
                       >
                         ←
                       </button>
                       <button
-                        onClick={() => movePiece('down')}
-                        onTouchEnd={(e) => {
+                        onTouchStart={(e) => {
                           e.preventDefault();
-                          e.stopPropagation();
+                          movePiece('down');
                         }}
+                        onClick={() => movePiece('down')}
                         className="py-3 bg-black dark:bg-white text-white dark:text-black rounded-lg font-bold text-xl active:scale-95 transition-all touch-none select-none hover:bg-black/80 dark:hover:bg-white/90"
                       >
                         ↓
                       </button>
                       <button
-                        onClick={() => movePiece('right')}
-                        onTouchEnd={(e) => {
+                        onTouchStart={(e) => {
                           e.preventDefault();
-                          e.stopPropagation();
+                          movePiece('right');
                         }}
+                        onClick={() => movePiece('right')}
                         className="py-3 border-2 border-black dark:border-white text-black dark:text-white rounded-lg font-bold text-xl active:scale-95 transition-all touch-none select-none hover:bg-black/5 dark:hover:bg-white/5"
                       >
                         →
