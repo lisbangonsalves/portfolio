@@ -107,11 +107,7 @@ export default function Experience() {
             <Link href="/games/tetris" className="text-black dark:text-white hover:underline font-medium">
               Tetris
             </Link>
-            {' '}or{' '}
-            <Link href="/games/flappy-bird" className="text-black dark:text-white hover:underline font-medium">
-              Flappy Bird
-            </Link>
-            !
+            ?
           </p>
         </div>
       </footer>

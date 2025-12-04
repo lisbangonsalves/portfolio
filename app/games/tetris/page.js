@@ -45,13 +45,19 @@ function getRandomShape() {
 }
 
 export default function Tetris() {
+  const [mounted, setMounted] = useState(false);
   const [board, setBoard] = useState(createEmptyBoard());
-  const [currentPiece, setCurrentPiece] = useState(getRandomShape());
+  const [currentPiece, setCurrentPiece] = useState(null);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
   const gameLoopRef = useRef(null);
+
+  useEffect(() => {
+    setMounted(true);
+    setCurrentPiece(getRandomShape());
+  }, []);
 
   const checkCollision = useCallback((piece, board, offsetX = 0, offsetY = 0) => {
     for (let y = 0; y < piece.shape.length; y++) {
@@ -228,6 +234,10 @@ export default function Tetris() {
   }, [dropPiece, gameOver, isPaused, gameStarted]);
 
   const renderBoard = () => {
+    if (!mounted) {
+      return createEmptyBoard();
+    }
+
     const displayBoard = board.map(row => [...row]);
 
     if (currentPiece && !gameOver) {
@@ -253,26 +263,26 @@ export default function Tetris() {
     <div className="min-h-screen bg-white dark:bg-[#0d0d0d]">
       <Navigation />
       <PageTransition>
-        <section className="min-h-screen flex items-center justify-center px-6 py-20">
+        <section className="min-h-screen flex items-center justify-center px-4 py-12 md:py-20">
           <div className="max-w-4xl mx-auto w-full">
-            <div className="text-center mb-8">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4 text-black dark:text-white">
+            <div className="text-center mb-4 md:mb-8">
+              <h1 className="text-3xl md:text-5xl font-bold mb-2 md:mb-4 text-black dark:text-white">
                 Tetris
               </h1>
-              <p className="text-lg text-black/60 dark:text-white/60">
+              <p className="text-sm md:text-lg text-black/60 dark:text-white/60">
                 Classic block-stacking puzzle game
               </p>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-8 items-center justify-center">
+            <div className="flex flex-col md:flex-row gap-4 md:gap-8 items-start justify-center">
               {/* Game Board */}
-              <div className="border-2 border-black/20 dark:border-white/20 rounded-xl p-4 bg-white dark:bg-[#0d0d0d]">
+              <div className="border-2 border-black/20 dark:border-white/20 rounded-xl p-2 md:p-4 bg-white dark:bg-[#0d0d0d] mx-auto">
                 <div className="grid gap-px" style={{ gridTemplateColumns: `repeat(${BOARD_WIDTH}, 1fr)` }}>
                   {displayBoard.map((row, y) =>
                     row.map((cell, x) => (
                       <div
                         key={`${y}-${x}`}
-                        className={`w-6 h-6 border border-black/10 dark:border-white/10 ${
+                        className={`w-4 h-4 md:w-6 md:h-6 border border-black/10 dark:border-white/10 ${
                           cell ? COLORS[cell] : 'bg-black/5 dark:bg-white/5'
                         }`}
                       />
@@ -287,6 +297,67 @@ export default function Tetris() {
                   <h3 className="text-lg font-semibold text-black dark:text-white mb-2">Score</h3>
                   <p className="text-3xl font-bold text-black dark:text-white">{score}</p>
                 </div>
+
+                {/* Mobile Controls - Right Below Score */}
+                {gameStarted && (
+                  <div className="md:hidden border border-black/10 dark:border-white/10 rounded-xl p-4 bg-white dark:bg-[#0d0d0d]">
+                    <h3 className="text-sm font-semibold text-black dark:text-white mb-3 text-center">Touch Controls</h3>
+                    <div className="grid grid-cols-4 gap-2 mb-2">
+                      <button
+                        onClick={() => movePiece('rotate')}
+                        onTouchEnd={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }}
+                        className="col-span-1 py-3 bg-black dark:bg-white text-white dark:text-black rounded-lg font-bold text-base active:scale-95 transition-all touch-none select-none hover:bg-black/80 dark:hover:bg-white/90"
+                      >
+                        ↻
+                      </button>
+                      <button
+                        onClick={() => hardDrop()}
+                        onTouchEnd={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }}
+                        className="col-span-3 py-3 border-2 border-black dark:border-white text-black dark:text-white rounded-lg font-medium text-sm active:scale-95 transition-all touch-none select-none hover:bg-black/5 dark:hover:bg-white/5"
+                      >
+                        ⬇ Drop
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                      <button
+                        onClick={() => movePiece('left')}
+                        onTouchEnd={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }}
+                        className="py-3 border-2 border-black dark:border-white text-black dark:text-white rounded-lg font-bold text-xl active:scale-95 transition-all touch-none select-none hover:bg-black/5 dark:hover:bg-white/5"
+                      >
+                        ←
+                      </button>
+                      <button
+                        onClick={() => movePiece('down')}
+                        onTouchEnd={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }}
+                        className="py-3 bg-black dark:bg-white text-white dark:text-black rounded-lg font-bold text-xl active:scale-95 transition-all touch-none select-none hover:bg-black/80 dark:hover:bg-white/90"
+                      >
+                        ↓
+                      </button>
+                      <button
+                        onClick={() => movePiece('right')}
+                        onTouchEnd={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }}
+                        className="py-3 border-2 border-black dark:border-white text-black dark:text-white rounded-lg font-bold text-xl active:scale-95 transition-all touch-none select-none hover:bg-black/5 dark:hover:bg-white/5"
+                      >
+                        →
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 <div className="border border-black/10 dark:border-white/10 rounded-xl p-6">
                   <h3 className="text-lg font-semibold text-black dark:text-white mb-4">Controls</h3>
