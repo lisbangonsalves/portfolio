@@ -52,7 +52,8 @@ export default function ExperienceManager() {
       setExperiences(prev => prev.map(exp => exp.id === editingId ? newExperience : exp));
       setEditingId(null);
     } else {
-      setExperiences(prev => [...prev, newExperience]);
+      // Add new experience at the beginning (newest first)
+      setExperiences(prev => [newExperience, ...prev]);
     }
 
     setFormData({
