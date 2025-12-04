@@ -12,10 +12,19 @@ export async function POST(request) {
     }
 
     // Validate file type
-    const validTypes = ['image/svg+xml', 'image/png', 'image/jpeg', 'image/jpg'];
+    const validTypes = [
+      'image/svg+xml',
+      'image/png',
+      'image/jpeg',
+      'image/jpg',
+      'image/x-icon',
+      'image/vnd.microsoft.icon',
+      'image/webp',
+      'image/gif'
+    ];
     if (!validTypes.includes(file.type)) {
       return NextResponse.json(
-        { error: 'Invalid file type. Only SVG, PNG, and JPG are allowed.' },
+        { error: 'Invalid file type. Only SVG, PNG, JPG, ICO, WebP, and GIF are allowed.' },
         { status: 400 }
       );
     }
