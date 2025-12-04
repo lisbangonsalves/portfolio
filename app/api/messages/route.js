@@ -1,23 +1,18 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-
-const DATA_FILE = path.join(process.cwd(), 'app', 'data', 'portfolio-data.json');
-
-function readData() {
-  const fileContents = fs.readFileSync(DATA_FILE, 'utf8');
-  return JSON.parse(fileContents);
-}
-
-function writeData(data) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-}
+import { getMessages, createMessage, deleteMessage, toggleMessageRead } from '@/lib/db';
+import { ObjectId } from 'mongodb';
 
 // GET: Fetch all messages (admin only)
 export async function GET() {
   try {
-    const data = readData();
-    return NextResponse.json({ messages: data.messages || [] });
+    const messages = await getMessages();
+    // Convert MongoDB _id to id for frontend compatibility
+    const formattedMessages = messages.map(msg => ({
+      ...msg,
+      id: msg._id.toString(),
+      _id: undefined
+    }));
+    return NextResponse.json({ messages: formattedMessages });
   } catch (error) {
     console.error('Failed to fetch messages:', error);
     return NextResponse.json({ error: 'Failed to fetch messages' }, { status: 500 });
@@ -28,7 +23,6 @@ export async function GET() {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const data = readData();
 
     // Handle new message submission
     if (body.action === 'submit') {
@@ -52,23 +46,14 @@ export async function POST(request) {
       }
 
       // Create new message
-      const newMessage = {
-        id: Date.now(),
+      const messageData = {
         name: name.trim(),
         email: email.trim().toLowerCase(),
         phone: phone ? phone.trim() : '',
         message: message.trim(),
-        timestamp: new Date().toISOString(),
-        read: false
       };
 
-      // Add message to data
-      if (!data.messages) {
-        data.messages = [];
-      }
-      data.messages.unshift(newMessage); // Add to beginning
-
-      writeData(data);
+      await createMessage(messageData);
 
       return NextResponse.json({
         success: true,
@@ -80,38 +65,41 @@ export async function POST(request) {
     if (body.action === 'delete') {
       const { messageId } = body;
 
-      if (!data.messages) {
-        return NextResponse.json({ error: 'No messages found' }, { status: 404 });
+      if (!messageId) {
+        return NextResponse.json({ error: 'Message ID is required' }, { status: 400 });
       }
 
-      data.messages = data.messages.filter(msg => msg.id !== messageId);
-      writeData(data);
-
-      return NextResponse.json({
-        success: true,
-        message: 'Message deleted successfully'
-      });
+      try {
+        await deleteMessage(new ObjectId(messageId));
+        return NextResponse.json({
+          success: true,
+          message: 'Message deleted successfully'
+        });
+      } catch (error) {
+        return NextResponse.json({ error: 'Message not found' }, { status: 404 });
+      }
     }
 
     // Handle mark as read/unread
     if (body.action === 'toggleRead') {
       const { messageId } = body;
 
-      if (!data.messages) {
-        return NextResponse.json({ error: 'No messages found' }, { status: 404 });
+      if (!messageId) {
+        return NextResponse.json({ error: 'Message ID is required' }, { status: 400 });
       }
 
-      const message = data.messages.find(msg => msg.id === messageId);
-      if (message) {
-        message.read = !message.read;
-        writeData(data);
+      try {
+        const newReadStatus = await toggleMessageRead(new ObjectId(messageId));
+        if (newReadStatus === null) {
+          return NextResponse.json({ error: 'Message not found' }, { status: 404 });
+        }
         return NextResponse.json({
           success: true,
-          read: message.read
+          read: newReadStatus
         });
+      } catch (error) {
+        return NextResponse.json({ error: 'Message not found' }, { status: 404 });
       }
-
-      return NextResponse.json({ error: 'Message not found' }, { status: 404 });
     }
 
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
@@ -129,21 +117,21 @@ export async function POST(request) {
 export async function DELETE(request) {
   try {
     const { searchParams } = new URL(request.url);
-    const messageId = parseInt(searchParams.get('id'));
+    const messageId = searchParams.get('id');
 
-    const data = readData();
-
-    if (!data.messages) {
-      return NextResponse.json({ error: 'No messages found' }, { status: 404 });
+    if (!messageId) {
+      return NextResponse.json({ error: 'Message ID is required' }, { status: 400 });
     }
 
-    data.messages = data.messages.filter(msg => msg.id !== messageId);
-    writeData(data);
-
-    return NextResponse.json({
-      success: true,
-      message: 'Message deleted successfully'
-    });
+    try {
+      await deleteMessage(new ObjectId(messageId));
+      return NextResponse.json({
+        success: true,
+        message: 'Message deleted successfully'
+      });
+    } catch (error) {
+      return NextResponse.json({ error: 'Message not found' }, { status: 404 });
+    }
 
   } catch (error) {
     console.error('Delete message error:', error);

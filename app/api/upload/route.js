@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import cloudinary from '@/lib/cloudinary';
 
 export async function POST(request) {
   try {
@@ -29,36 +28,32 @@ export async function POST(request) {
       );
     }
 
-    // Get file extension
-    const extension = file.type.split('/')[1].replace('+xml', '');
-
-    // Generate unique filename
-    const timestamp = Date.now();
-    const sanitizedName = file.name
-      .replace(/[^a-zA-Z0-9.-]/g, '_')
-      .replace(/\.[^/.]+$/, ''); // Remove original extension
-    const filename = `${sanitizedName}_${timestamp}.${extension}`;
-
-    // Create directory if it doesn't exist
-    const uploadDir = path.join(process.cwd(), 'public', type);
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-
-    // Convert file to buffer and save
+    // Convert file to buffer
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    const filepath = path.join(uploadDir, filename);
 
-    fs.writeFileSync(filepath, buffer);
+    // Upload to Cloudinary
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: `portfolio/${type}`,
+          resource_type: 'auto',
+          public_id: `${file.name.replace(/\.[^/.]+$/, '')}_${Date.now()}`,
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
 
-    // Return the public path
-    const publicPath = `/${type}/${filename}`;
+      uploadStream.end(buffer);
+    });
 
+    // Return the Cloudinary URL
     return NextResponse.json({
       success: true,
-      path: publicPath,
-      filename: filename
+      path: result.secure_url,
+      filename: result.public_id
     });
 
   } catch (error) {
