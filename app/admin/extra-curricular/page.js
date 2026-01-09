@@ -4,91 +4,46 @@ import { useState, useEffect } from 'react';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import AdminSidebar from '../../components/AdminSidebar';
 
-export default function ExperienceManager() {
-  const [experiences, setExperiences] = useState([]);
+export default function ExtraCurricularManager() {
+  const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
-    title: '',
-    company: '',
-    period: '',
-    responsibilities: '',
+    task: '',
+    community: '',
+    year: '',
     logo: ''
   });
   const [uploading, setUploading] = useState(false);
   const [logoPreview, setLogoPreview] = useState(null);
 
   useEffect(() => {
-    fetchExperiences();
+    fetchActivities();
   }, []);
 
-  const fetchExperiences = async () => {
+  const fetchActivities = async () => {
     try {
       const response = await fetch('/api/portfolio');
       const data = await response.json();
-      setExperiences(data.experience);
+      setActivities(data.extraCurricularActivities || []);
       setLoading(false);
     } catch (error) {
-      console.error('Failed to fetch experiences:', error);
+      console.error('Failed to fetch extra-curricular activities:', error);
       setLoading(false);
     }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const newExperience = {
-      id: editingId || Date.now(),
-      title: formData.title,
-      company: formData.company,
-      period: formData.period,
-      responsibilities: formData.responsibilities.split('\n').filter(r => r.trim()),
-      logo: formData.logo
-    };
-
-    if (editingId) {
-      setExperiences(prev => prev.map(exp => exp.id === editingId ? newExperience : exp));
-      setEditingId(null);
-    } else {
-      // Add new experience at the beginning (newest first)
-      setExperiences(prev => [newExperience, ...prev]);
-    }
-
-    setFormData({
-      title: '',
-      company: '',
-      period: '',
-      responsibilities: '',
-      logo: ''
-    });
-    setLogoPreview(null);
-  };
-
-  const handleEdit = (experience) => {
-    setEditingId(experience.id);
-    setFormData({
-      title: experience.title,
-      company: experience.company,
-      period: experience.period,
-      responsibilities: experience.responsibilities.join('\n'),
-      logo: experience.logo || ''
-    });
-    setLogoPreview(experience.logo || null);
   };
 
   const handleLogoUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Validate file type
     if (!file.type.match(/^image\/(svg\+xml|png|jpe?g)$/)) {
       alert('Please upload only SVG, PNG, or JPG files');
       return;
     }
 
-    // Validate file size
     if (file.size > 2 * 1024 * 1024) {
       alert('File size must be less than 2MB');
       return;
@@ -97,13 +52,13 @@ export default function ExperienceManager() {
     setUploading(true);
 
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('type', 'company_logo');
+      const uploadFormData = new FormData();
+      uploadFormData.append('file', file);
+      uploadFormData.append('type', 'company_logo');
 
       const response = await fetch('/api/upload', {
         method: 'POST',
-        body: formData
+        body: uploadFormData
       });
 
       const data = await response.json();
@@ -124,9 +79,47 @@ export default function ExperienceManager() {
     setUploading(false);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const newActivity = {
+      id: editingId || Date.now(),
+      task: formData.task.trim(),
+      community: formData.community.trim(),
+      year: formData.year.trim(),
+      logo: formData.logo
+    };
+
+    if (editingId) {
+      setActivities(prev => prev.map(activity => activity.id === editingId ? newActivity : activity));
+      setEditingId(null);
+    } else {
+      setActivities(prev => [newActivity, ...prev]);
+    }
+
+    setFormData({
+      task: '',
+      community: '',
+      year: '',
+      logo: ''
+    });
+    setLogoPreview(null);
+  };
+
+  const handleEdit = (activity) => {
+    setEditingId(activity.id);
+    setFormData({
+      task: activity.task,
+      community: activity.community,
+      year: activity.year,
+      logo: activity.logo || ''
+    });
+    setLogoPreview(activity.logo || null);
+  };
+
   const handleDelete = (id) => {
-    if (confirm('Are you sure you want to delete this experience?')) {
-      setExperiences(prev => prev.filter(exp => exp.id !== id));
+    if (confirm('Are you sure you want to delete this extra-curricular activity entry?')) {
+      setActivities(prev => prev.filter(activity => activity.id !== id));
     }
   };
 
@@ -138,17 +131,17 @@ export default function ExperienceManager() {
       const response = await fetch('/api/portfolio', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'experience', data: experiences })
+        body: JSON.stringify({ type: 'extraCurricularActivities', data: activities })
       });
 
       if (response.ok) {
-        setMessage('Experience updated successfully!');
+        setMessage('Extra-curricular activities updated successfully!');
         setTimeout(() => setMessage(''), 3000);
       } else {
-        setMessage('Failed to update experience');
+        setMessage('Failed to update extra-curricular activities');
       }
     } catch (error) {
-      setMessage('Error updating experience');
+      setMessage('Error updating extra-curricular activities');
     }
 
     setSaving(false);
@@ -175,34 +168,38 @@ export default function ExperienceManager() {
           <div className="max-w-5xl mx-auto px-6 py-12">
           <div className="mb-8">
             <h1 className="text-4xl font-bold text-black dark:text-white mb-4">
-              Manage Experience
+              Manage Extra-Curricular Activities
             </h1>
             <p className="text-lg text-black/60 dark:text-white/60">
-              Add, edit, or remove work experiences from your portfolio
+              Add, edit, or remove extra-curricular activity entries from your About page
             </p>
           </div>
 
           {message && (
-            <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg text-green-600 dark:text-green-400">
+            <div className={`mb-6 p-4 border rounded-lg ${
+              message.includes('successfully')
+                ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-600 dark:text-green-400'
+                : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400'
+            }`}>
               {message}
             </div>
           )}
 
-          {/* Add/Edit Experience Form */}
+          {/* Add/Edit Activity Form */}
           <div className="mb-8 border border-black/10 dark:border-white/10 rounded-xl p-6">
             <h2 className="text-xl font-semibold text-black dark:text-white mb-4">
-              {editingId ? 'Edit Experience' : 'Add New Experience'}
+              {editingId ? 'Edit Activity' : 'Add New Activity'}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-black dark:text-white mb-2">
-                  Job Title
+                  Task
                 </label>
                 <input
                   type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="e.g., Senior Full-Stack Developer"
+                  value={formData.task}
+                  onChange={(e) => setFormData({ ...formData, task: e.target.value })}
+                  placeholder="e.g., Organized Tech Conference 2024"
                   className="w-full px-4 py-2 border border-black/10 dark:border-white/10 rounded-lg bg-white dark:bg-[#0d0d0d] text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black/20 dark:focus:ring-white/20"
                   required
                 />
@@ -210,13 +207,13 @@ export default function ExperienceManager() {
 
               <div>
                 <label className="block text-sm font-medium text-black dark:text-white mb-2">
-                  Company
+                  Community
                 </label>
                 <input
                   type="text"
-                  value={formData.company}
-                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  placeholder="e.g., Tech Company Inc."
+                  value={formData.community}
+                  onChange={(e) => setFormData({ ...formData, community: e.target.value })}
+                  placeholder="e.g., Developer Student Club"
                   className="w-full px-4 py-2 border border-black/10 dark:border-white/10 rounded-lg bg-white dark:bg-[#0d0d0d] text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black/20 dark:focus:ring-white/20"
                   required
                 />
@@ -224,13 +221,13 @@ export default function ExperienceManager() {
 
               <div>
                 <label className="block text-sm font-medium text-black dark:text-white mb-2">
-                  Period
+                  Year
                 </label>
                 <input
                   type="text"
-                  value={formData.period}
-                  onChange={(e) => setFormData({ ...formData, period: e.target.value })}
-                  placeholder="e.g., 2022 - Present"
+                  value={formData.year}
+                  onChange={(e) => setFormData({ ...formData, year: e.target.value })}
+                  placeholder="e.g., 2024"
                   className="w-full px-4 py-2 border border-black/10 dark:border-white/10 rounded-lg bg-white dark:bg-[#0d0d0d] text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black/20 dark:focus:ring-white/20"
                   required
                 />
@@ -238,20 +235,20 @@ export default function ExperienceManager() {
 
               <div>
                 <label className="block text-sm font-medium text-black dark:text-white mb-2">
-                  Company Logo (Optional)
+                  Logo (Optional)
                 </label>
 
                 {/* Upload Button */}
                 <div className="mb-3">
                   <input
                     type="file"
-                    id="logo-upload"
+                    id="activity-logo-upload"
                     accept=".svg,.png,.jpg,.jpeg,image/svg+xml,image/png,image/jpeg"
                     onChange={handleLogoUpload}
                     className="hidden"
                   />
                   <label
-                    htmlFor="logo-upload"
+                    htmlFor="activity-logo-upload"
                     className={`inline-flex items-center gap-2 px-4 py-2 border-2 border-dashed border-black/20 dark:border-white/20 rounded-lg cursor-pointer hover:border-black/40 dark:hover:border-white/40 transition-colors ${
                       uploading ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
@@ -312,24 +309,10 @@ export default function ExperienceManager() {
                       setFormData({ ...formData, logo: e.target.value });
                       setLogoPreview(e.target.value || null);
                     }}
-                    placeholder="e.g., /company_logo/browserstack.svg or https://..."
+                    placeholder="e.g., https://example.com/logo.svg"
                     className="w-full px-4 py-2 border border-black/10 dark:border-white/10 rounded-lg bg-white dark:bg-[#0d0d0d] text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black/20 dark:focus:ring-white/20"
                   />
                 </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-black dark:text-white mb-2">
-                  Responsibilities (one per line)
-                </label>
-                <textarea
-                  value={formData.responsibilities}
-                  onChange={(e) => setFormData({ ...formData, responsibilities: e.target.value })}
-                  rows={5}
-                  placeholder="Led development of microservices architecture&#10;Improved application performance by 40%&#10;Mentored junior developers"
-                  className="w-full px-4 py-2 border border-black/10 dark:border-white/10 rounded-lg bg-white dark:bg-[#0d0d0d] text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black/20 dark:focus:ring-white/20"
-                  required
-                />
               </div>
 
               <div className="flex gap-3">
@@ -337,14 +320,14 @@ export default function ExperienceManager() {
                   type="submit"
                   className="px-6 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg font-medium hover:bg-black/80 dark:hover:bg-white/90 transition-colors"
                 >
-                  {editingId ? 'Update Experience' : 'Add Experience'}
+                  {editingId ? 'Update Activity' : 'Add Activity'}
                 </button>
                 {editingId && (
                   <button
                     type="button"
                     onClick={() => {
                       setEditingId(null);
-                      setFormData({ title: '', company: '', period: '', responsibilities: '', logo: '' });
+                      setFormData({ task: '', community: '', year: '', logo: '' });
                       setLogoPreview(null);
                     }}
                     className="px-6 py-2 border border-black/20 dark:border-white/20 text-black dark:text-white rounded-lg font-medium hover:border-black/40 dark:hover:border-white/40 transition-colors"
@@ -356,40 +339,49 @@ export default function ExperienceManager() {
             </form>
           </div>
 
-          {/* Experience List */}
+          {/* Activities List */}
           <div className="space-y-6 mb-8">
-            {experiences.map((experience) => (
-              <div key={experience.id} className="border border-black/10 dark:border-white/10 rounded-xl p-6">
+            {activities.map((activity) => (
+              <div key={activity.id} className="border border-black/10 dark:border-white/10 rounded-xl p-6">
                 <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="text-xl font-semibold text-black dark:text-white">{experience.title}</h3>
-                    <p className="text-lg text-black/60 dark:text-white/60">{experience.company}</p>
-                    <p className="text-black/50 dark:text-white/50 text-sm mt-1">{experience.period}</p>
+                  <div className="flex items-center gap-4">
+                    {activity.logo && (
+                      <div className="flex-shrink-0">
+                        <img
+                          src={activity.logo}
+                          alt={activity.community}
+                          className="w-12 h-12 object-contain"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    )}
+                    <div>
+                      <h3 className="text-xl font-semibold text-black dark:text-white">{activity.task}</h3>
+                      <p className="text-lg text-black/60 dark:text-white/60">{activity.community}</p>
+                      <p className="text-black/50 dark:text-white/50 text-sm mt-1">{activity.year}</p>
+                    </div>
                   </div>
                   <div className="flex gap-2">
                     <button
-                      onClick={() => handleEdit(experience)}
+                      onClick={() => handleEdit(activity)}
                       className="px-3 py-1 text-sm border border-black/20 dark:border-white/20 text-black dark:text-white rounded-lg hover:border-black/40 dark:hover:border-white/40 transition-colors"
                     >
                       Edit
                     </button>
                     <button
-                      onClick={() => handleDelete(experience.id)}
+                      onClick={() => handleDelete(activity.id)}
                       className="px-3 py-1 text-sm border border-red-500/20 text-red-500 dark:text-red-400 rounded-lg hover:border-red-500/40 transition-colors"
                     >
                       Delete
                     </button>
                   </div>
                 </div>
-                <ul className="space-y-2 text-black/60 dark:text-white/60">
-                  {experience.responsibilities.map((resp, index) => (
-                    <li key={index}>• {resp}</li>
-                  ))}
-                </ul>
               </div>
             ))}
-            {experiences.length === 0 && (
-              <p className="text-center text-black/40 dark:text-white/40 py-8">No experience added yet</p>
+            {activities.length === 0 && (
+              <p className="text-center text-black/40 dark:text-white/40 py-8">No extra-curricular activity entries added yet</p>
             )}
           </div>
 

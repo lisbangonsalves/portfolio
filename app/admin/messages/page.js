@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import ProtectedRoute from '../../components/ProtectedRoute';
-import AdminNav from '../../components/AdminNav';
+import AdminSidebar from '../../components/AdminSidebar';
 
 export default function MessagesManager() {
   const [messages, setMessages] = useState([]);
@@ -96,8 +96,11 @@ export default function MessagesManager() {
   if (loading) {
     return (
       <ProtectedRoute>
-        <div className="min-h-screen bg-white dark:bg-[#0d0d0d] flex items-center justify-center">
-          <div className="text-black/60 dark:text-white/60">Loading...</div>
+        <div className="min-h-screen bg-white dark:bg-[#0d0d0d] flex">
+          <AdminSidebar />
+          <div className="flex-1 lg:ml-64 pt-16 lg:pt-0 flex items-center justify-center">
+            <div className="text-black/60 dark:text-white/60">Loading...</div>
+          </div>
         </div>
       </ProtectedRoute>
     );
@@ -105,10 +108,10 @@ export default function MessagesManager() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-white dark:bg-[#0d0d0d]">
-        <AdminNav />
-
-        <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="min-h-screen bg-white dark:bg-[#0d0d0d] flex">
+        <AdminSidebar />
+        <div className="flex-1 lg:ml-64 pt-16 lg:pt-0">
+          <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="mb-8">
             <h1 className="text-4xl font-bold text-black dark:text-white mb-2">
               Messages
@@ -228,11 +231,11 @@ export default function MessagesManager() {
               ))}
             </div>
           )}
+          </div>
         </div>
-      </div>
 
-      {/* Message Detail Modal */}
-      {selectedMessage && (
+        {/* Message Detail Modal */}
+        {selectedMessage && (
         <div
           className="fixed inset-0 bg-black/70 backdrop-blur-md z-[100] p-4"
           onClick={() => setSelectedMessage(null)}
@@ -333,6 +336,7 @@ export default function MessagesManager() {
           </div>
         </div>
       )}
+      </div>
     </ProtectedRoute>
   );
 }

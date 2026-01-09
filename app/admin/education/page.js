@@ -4,34 +4,33 @@ import { useState, useEffect } from 'react';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import AdminSidebar from '../../components/AdminSidebar';
 
-export default function ExperienceManager() {
-  const [experiences, setExperiences] = useState([]);
+export default function EducationManager() {
+  const [educations, setEducations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
-    title: '',
-    company: '',
-    period: '',
-    responsibilities: '',
+    institution: '',
+    degree: '',
+    year: '',
     logo: ''
   });
   const [uploading, setUploading] = useState(false);
   const [logoPreview, setLogoPreview] = useState(null);
 
   useEffect(() => {
-    fetchExperiences();
+    fetchEducations();
   }, []);
 
-  const fetchExperiences = async () => {
+  const fetchEducations = async () => {
     try {
       const response = await fetch('/api/portfolio');
       const data = await response.json();
-      setExperiences(data.experience);
+      setEducations(data.education || []);
       setLoading(false);
     } catch (error) {
-      console.error('Failed to fetch experiences:', error);
+      console.error('Failed to fetch education:', error);
       setLoading(false);
     }
   };
@@ -39,43 +38,40 @@ export default function ExperienceManager() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const newExperience = {
+    const newEducation = {
       id: editingId || Date.now(),
-      title: formData.title,
-      company: formData.company,
-      period: formData.period,
-      responsibilities: formData.responsibilities.split('\n').filter(r => r.trim()),
+      institution: formData.institution.trim(),
+      degree: formData.degree.trim(),
+      year: formData.year.trim(),
       logo: formData.logo
     };
 
     if (editingId) {
-      setExperiences(prev => prev.map(exp => exp.id === editingId ? newExperience : exp));
+      setEducations(prev => prev.map(edu => edu.id === editingId ? newEducation : edu));
       setEditingId(null);
     } else {
-      // Add new experience at the beginning (newest first)
-      setExperiences(prev => [newExperience, ...prev]);
+      // Add new education at the beginning (newest first)
+      setEducations(prev => [newEducation, ...prev]);
     }
 
     setFormData({
-      title: '',
-      company: '',
-      period: '',
-      responsibilities: '',
+      institution: '',
+      degree: '',
+      year: '',
       logo: ''
     });
     setLogoPreview(null);
   };
 
-  const handleEdit = (experience) => {
-    setEditingId(experience.id);
+  const handleEdit = (education) => {
+    setEditingId(education.id);
     setFormData({
-      title: experience.title,
-      company: experience.company,
-      period: experience.period,
-      responsibilities: experience.responsibilities.join('\n'),
-      logo: experience.logo || ''
+      institution: education.institution,
+      degree: education.degree,
+      year: education.year,
+      logo: education.logo || ''
     });
-    setLogoPreview(experience.logo || null);
+    setLogoPreview(education.logo || null);
   };
 
   const handleLogoUpload = async (e) => {
@@ -97,13 +93,13 @@ export default function ExperienceManager() {
     setUploading(true);
 
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('type', 'company_logo');
+      const uploadFormData = new FormData();
+      uploadFormData.append('file', file);
+      uploadFormData.append('type', 'company_logo');
 
       const response = await fetch('/api/upload', {
         method: 'POST',
-        body: formData
+        body: uploadFormData
       });
 
       const data = await response.json();
@@ -125,8 +121,8 @@ export default function ExperienceManager() {
   };
 
   const handleDelete = (id) => {
-    if (confirm('Are you sure you want to delete this experience?')) {
-      setExperiences(prev => prev.filter(exp => exp.id !== id));
+    if (confirm('Are you sure you want to delete this qualification entry?')) {
+      setEducations(prev => prev.filter(edu => edu.id !== id));
     }
   };
 
@@ -138,17 +134,17 @@ export default function ExperienceManager() {
       const response = await fetch('/api/portfolio', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'experience', data: experiences })
+        body: JSON.stringify({ type: 'education', data: educations })
       });
 
       if (response.ok) {
-        setMessage('Experience updated successfully!');
+        setMessage('Qualification updated successfully!');
         setTimeout(() => setMessage(''), 3000);
       } else {
-        setMessage('Failed to update experience');
+        setMessage('Failed to update qualification');
       }
     } catch (error) {
-      setMessage('Error updating experience');
+      setMessage('Error updating qualification');
     }
 
     setSaving(false);
@@ -175,34 +171,38 @@ export default function ExperienceManager() {
           <div className="max-w-5xl mx-auto px-6 py-12">
           <div className="mb-8">
             <h1 className="text-4xl font-bold text-black dark:text-white mb-4">
-              Manage Experience
+              Manage Qualification
             </h1>
             <p className="text-lg text-black/60 dark:text-white/60">
-              Add, edit, or remove work experiences from your portfolio
+              Add, edit, or remove qualification entries from your About page
             </p>
           </div>
 
           {message && (
-            <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg text-green-600 dark:text-green-400">
+            <div className={`mb-6 p-4 border rounded-lg ${
+              message.includes('successfully')
+                ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-600 dark:text-green-400'
+                : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400'
+            }`}>
               {message}
             </div>
           )}
 
-          {/* Add/Edit Experience Form */}
+          {/* Add/Edit Education Form */}
           <div className="mb-8 border border-black/10 dark:border-white/10 rounded-xl p-6">
             <h2 className="text-xl font-semibold text-black dark:text-white mb-4">
-              {editingId ? 'Edit Experience' : 'Add New Experience'}
+              {editingId ? 'Edit Qualification' : 'Add New Qualification'}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-black dark:text-white mb-2">
-                  Job Title
+                  College/University
                 </label>
                 <input
                   type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="e.g., Senior Full-Stack Developer"
+                  value={formData.institution}
+                  onChange={(e) => setFormData({ ...formData, institution: e.target.value })}
+                  placeholder="e.g., University of Technology"
                   className="w-full px-4 py-2 border border-black/10 dark:border-white/10 rounded-lg bg-white dark:bg-[#0d0d0d] text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black/20 dark:focus:ring-white/20"
                   required
                 />
@@ -210,13 +210,13 @@ export default function ExperienceManager() {
 
               <div>
                 <label className="block text-sm font-medium text-black dark:text-white mb-2">
-                  Company
+                  Degree Name
                 </label>
                 <input
                   type="text"
-                  value={formData.company}
-                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  placeholder="e.g., Tech Company Inc."
+                  value={formData.degree}
+                  onChange={(e) => setFormData({ ...formData, degree: e.target.value })}
+                  placeholder="e.g., Bachelor of Science in Computer Science"
                   className="w-full px-4 py-2 border border-black/10 dark:border-white/10 rounded-lg bg-white dark:bg-[#0d0d0d] text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black/20 dark:focus:ring-white/20"
                   required
                 />
@@ -224,13 +224,13 @@ export default function ExperienceManager() {
 
               <div>
                 <label className="block text-sm font-medium text-black dark:text-white mb-2">
-                  Period
+                  Year
                 </label>
                 <input
                   type="text"
-                  value={formData.period}
-                  onChange={(e) => setFormData({ ...formData, period: e.target.value })}
-                  placeholder="e.g., 2022 - Present"
+                  value={formData.year}
+                  onChange={(e) => setFormData({ ...formData, year: e.target.value })}
+                  placeholder="e.g., 2020 - 2024"
                   className="w-full px-4 py-2 border border-black/10 dark:border-white/10 rounded-lg bg-white dark:bg-[#0d0d0d] text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black/20 dark:focus:ring-white/20"
                   required
                 />
@@ -238,7 +238,7 @@ export default function ExperienceManager() {
 
               <div>
                 <label className="block text-sm font-medium text-black dark:text-white mb-2">
-                  Company Logo (Optional)
+                  College/University Logo (Optional)
                 </label>
 
                 {/* Upload Button */}
@@ -312,24 +312,10 @@ export default function ExperienceManager() {
                       setFormData({ ...formData, logo: e.target.value });
                       setLogoPreview(e.target.value || null);
                     }}
-                    placeholder="e.g., /company_logo/browserstack.svg or https://..."
+                    placeholder="e.g., /company_logo/university.svg or https://..."
                     className="w-full px-4 py-2 border border-black/10 dark:border-white/10 rounded-lg bg-white dark:bg-[#0d0d0d] text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black/20 dark:focus:ring-white/20"
                   />
                 </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-black dark:text-white mb-2">
-                  Responsibilities (one per line)
-                </label>
-                <textarea
-                  value={formData.responsibilities}
-                  onChange={(e) => setFormData({ ...formData, responsibilities: e.target.value })}
-                  rows={5}
-                  placeholder="Led development of microservices architecture&#10;Improved application performance by 40%&#10;Mentored junior developers"
-                  className="w-full px-4 py-2 border border-black/10 dark:border-white/10 rounded-lg bg-white dark:bg-[#0d0d0d] text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black/20 dark:focus:ring-white/20"
-                  required
-                />
               </div>
 
               <div className="flex gap-3">
@@ -337,14 +323,14 @@ export default function ExperienceManager() {
                   type="submit"
                   className="px-6 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg font-medium hover:bg-black/80 dark:hover:bg-white/90 transition-colors"
                 >
-                  {editingId ? 'Update Experience' : 'Add Experience'}
+                  {editingId ? 'Update Qualification' : 'Add Qualification'}
                 </button>
                 {editingId && (
                   <button
                     type="button"
                     onClick={() => {
                       setEditingId(null);
-                      setFormData({ title: '', company: '', period: '', responsibilities: '', logo: '' });
+                      setFormData({ institution: '', degree: '', year: '', logo: '' });
                       setLogoPreview(null);
                     }}
                     className="px-6 py-2 border border-black/20 dark:border-white/20 text-black dark:text-white rounded-lg font-medium hover:border-black/40 dark:hover:border-white/40 transition-colors"
@@ -356,40 +342,49 @@ export default function ExperienceManager() {
             </form>
           </div>
 
-          {/* Experience List */}
+          {/* Education List */}
           <div className="space-y-6 mb-8">
-            {experiences.map((experience) => (
-              <div key={experience.id} className="border border-black/10 dark:border-white/10 rounded-xl p-6">
+            {educations.map((education) => (
+              <div key={education.id} className="border border-black/10 dark:border-white/10 rounded-xl p-6">
                 <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="text-xl font-semibold text-black dark:text-white">{experience.title}</h3>
-                    <p className="text-lg text-black/60 dark:text-white/60">{experience.company}</p>
-                    <p className="text-black/50 dark:text-white/50 text-sm mt-1">{experience.period}</p>
+                  <div className="flex items-start gap-4 flex-1">
+                    {education.logo && (
+                      <div className="w-12 h-12 flex items-center justify-center bg-white dark:bg-black rounded-lg border border-black/10 dark:border-white/10 flex-shrink-0">
+                        <img
+                          src={education.logo}
+                          alt={education.institution}
+                          className="max-w-full max-h-full object-contain p-1"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    )}
+                    <div>
+                      <h3 className="text-xl font-semibold text-black dark:text-white">{education.degree}</h3>
+                      <p className="text-lg text-black/60 dark:text-white/60">{education.institution}</p>
+                      <p className="text-black/50 dark:text-white/50 text-sm mt-1">{education.year}</p>
+                    </div>
                   </div>
                   <div className="flex gap-2">
                     <button
-                      onClick={() => handleEdit(experience)}
+                      onClick={() => handleEdit(education)}
                       className="px-3 py-1 text-sm border border-black/20 dark:border-white/20 text-black dark:text-white rounded-lg hover:border-black/40 dark:hover:border-white/40 transition-colors"
                     >
                       Edit
                     </button>
                     <button
-                      onClick={() => handleDelete(experience.id)}
+                      onClick={() => handleDelete(education.id)}
                       className="px-3 py-1 text-sm border border-red-500/20 text-red-500 dark:text-red-400 rounded-lg hover:border-red-500/40 transition-colors"
                     >
                       Delete
                     </button>
                   </div>
                 </div>
-                <ul className="space-y-2 text-black/60 dark:text-white/60">
-                  {experience.responsibilities.map((resp, index) => (
-                    <li key={index}>• {resp}</li>
-                  ))}
-                </ul>
               </div>
             ))}
-            {experiences.length === 0 && (
-              <p className="text-center text-black/40 dark:text-white/40 py-8">No experience added yet</p>
+            {educations.length === 0 && (
+              <p className="text-center text-black/40 dark:text-white/40 py-8">No qualification entries added yet</p>
             )}
           </div>
 

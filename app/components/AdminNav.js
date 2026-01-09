@@ -10,6 +10,10 @@ export default function AdminNav() {
 
   const navItems = [
     { name: 'Dashboard', path: '/admin/dashboard' },
+    { name: 'About', path: '/admin/about' },
+    { name: 'Qualification', path: '/admin/education' },
+    { name: 'Certifications', path: '/admin/certifications' },
+    { name: 'Research Papers', path: '/admin/research-papers' },
     { name: 'Projects', path: '/admin/projects' },
     { name: 'Experience', path: '/admin/experience' },
     { name: 'Messages', path: '/admin/messages' },

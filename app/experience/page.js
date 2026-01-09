@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Navigation from '../components/Navigation';
 import PageTransition from '../components/PageTransition';
+import Footer from '../components/Footer';
 
 export default function Experience() {
   const [experiences, setExperiences] = useState([]);
@@ -100,17 +101,7 @@ export default function Experience() {
         </div>
       </section>
 
-      <footer className="border-t border-black/10 dark:border-white/10 py-8 px-6">
-        <div className="max-w-5xl mx-auto text-center text-black/50 dark:text-white/50 text-sm">
-          <p>
-            Wanna play{' '}
-            <Link href="/games/tetris" className="text-black dark:text-white hover:underline font-medium">
-              Tetris
-            </Link>
-            ?
-          </p>
-        </div>
-      </footer>
+      <Footer />
       </PageTransition>
     </div>
   );

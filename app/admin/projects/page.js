@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import ProtectedRoute from '../../components/ProtectedRoute';
-import AdminNav from '../../components/AdminNav';
+import AdminSidebar from '../../components/AdminSidebar';
 import LogoPicker from '../../components/LogoPicker';
 
 export default function ProjectsManager() {
@@ -119,8 +119,11 @@ export default function ProjectsManager() {
   if (loading) {
     return (
       <ProtectedRoute>
-        <div className="min-h-screen bg-white dark:bg-[#0d0d0d] flex items-center justify-center">
-          <div className="text-black/60 dark:text-white/60">Loading...</div>
+        <div className="min-h-screen bg-white dark:bg-[#0d0d0d] flex">
+          <AdminSidebar />
+          <div className="flex-1 lg:ml-64 pt-16 lg:pt-0 flex items-center justify-center">
+            <div className="text-black/60 dark:text-white/60">Loading...</div>
+          </div>
         </div>
       </ProtectedRoute>
     );
@@ -128,10 +131,10 @@ export default function ProjectsManager() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-white dark:bg-[#0d0d0d]">
-        <AdminNav />
-
-        <div className="max-w-5xl mx-auto px-6 py-12">
+      <div className="min-h-screen bg-white dark:bg-[#0d0d0d] flex">
+        <AdminSidebar />
+        <div className="flex-1 lg:ml-64 pt-16 lg:pt-0">
+          <div className="max-w-5xl mx-auto px-6 py-12">
           <div className="mb-8">
             <h1 className="text-4xl font-bold text-black dark:text-white mb-4">
               Manage Projects
@@ -329,6 +332,7 @@ export default function ProjectsManager() {
             >
               {saving ? 'Saving...' : 'Save Changes'}
             </button>
+          </div>
           </div>
         </div>
       </div>

@@ -26,6 +26,16 @@ export async function POST(request) {
       currentData = await updatePortfolioData('projects', newData);
     } else if (type === 'experience') {
       currentData = await updatePortfolioData('experience', newData);
+    } else if (type === 'about') {
+      currentData = await updatePortfolioData('about', newData);
+    } else if (type === 'education') {
+      currentData = await updatePortfolioData('education', newData);
+    } else if (type === 'certifications') {
+      currentData = await updatePortfolioData('certifications', newData);
+    } else if (type === 'researchPapers') {
+      currentData = await updatePortfolioData('researchPapers', newData);
+    } else if (type === 'extraCurricularActivities') {
+      currentData = await updatePortfolioData('extraCurricularActivities', newData);
     } else {
       return NextResponse.json({ error: 'Invalid type' }, { status: 400 });
     }

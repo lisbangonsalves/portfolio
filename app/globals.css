@@ -26,6 +26,40 @@ body {
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  cursor: default !important;
+}
+
+/* Ensure cursor is always visible */
+* {
+  cursor: inherit;
+}
+
+/* Specific cursor types for interactive elements */
+a,
+button,
+[role="button"],
+input[type="submit"],
+input[type="button"],
+input[type="reset"],
+select {
+  cursor: pointer;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+textarea {
+  cursor: text;
+}
+
+input:disabled,
+button:disabled,
+textarea:disabled,
+select:disabled {
+  cursor: not-allowed;
 }
 
 /* Smooth scrolling */
