@@ -36,6 +36,8 @@ export async function POST(request) {
       currentData = await updatePortfolioData('researchPapers', newData);
     } else if (type === 'extraCurricularActivities') {
       currentData = await updatePortfolioData('extraCurricularActivities', newData);
+    } else if (type === 'blogs') {
+      currentData = await updatePortfolioData('blogs', newData);
     } else {
       return NextResponse.json({ error: 'Invalid type' }, { status: 400 });
     }

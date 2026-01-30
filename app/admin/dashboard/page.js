@@ -55,6 +55,12 @@ export default function AdminDashboard() {
       icon: '💼',
     },
     {
+      title: 'Manage Blogs',
+      description: 'Add, edit, or remove blog posts',
+      link: '/admin/blogs',
+      icon: '📰',
+    },
+    {
       title: 'Manage Resume',
       description: 'Upload and manage your resume',
       link: '/admin/resume',

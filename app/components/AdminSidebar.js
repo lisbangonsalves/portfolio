@@ -19,6 +19,7 @@ export default function AdminSidebar() {
     { name: 'Extra-Curricular', path: '/admin/extra-curricular', icon: '🎯' },
     { name: 'Projects', path: '/admin/projects', icon: '🚀' },
     { name: 'Experience', path: '/admin/experience', icon: '💼' },
+    { name: 'Blogs', path: '/admin/blogs', icon: '📰' },
     { name: 'Resume', path: '/admin/resume', icon: '📄' },
     { name: 'Messages', path: '/admin/messages', icon: '✉️' },
   ];
