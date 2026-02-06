@@ -9,19 +9,21 @@ import Footer from './components/Footer';
 function AnimatedGradient() {
   const [time, setTime] = useState(0);
   const animationRef = useRef(null);
-  const startTimeRef = useRef(Date.now());
+  const startTimeRef = useRef(null);
   
   const cols = 30;
   const rows = 25;
   const totalCells = cols * rows;
   
   const animate = useCallback(() => {
+    if (startTimeRef.current === null) return;
     const elapsed = (Date.now() - startTimeRef.current) / 1000;
     setTime(elapsed);
     animationRef.current = requestAnimationFrame(animate);
   }, []);
 
   useEffect(() => {
+    startTimeRef.current = Date.now();
     animationRef.current = requestAnimationFrame(animate);
     return () => {
       if (animationRef.current) {
@@ -43,6 +45,7 @@ function AnimatedGradient() {
         gridTemplateColumns: `repeat(${cols}, 1fr)`,
         gridTemplateRows: `repeat(${rows}, 1fr)`,
       }}
+      suppressHydrationWarning
     >
       {Array.from({ length: totalCells }).map((_, i) => {
         const row = Math.floor(i / cols);
@@ -91,6 +94,7 @@ function AnimatedGradient() {
             style={{
               backgroundColor: `hsl(${finalHue}, ${saturation}%, ${finalLightness}%)`,
             }}
+            suppressHydrationWarning
           />
         );
       })}
